@@ -15,18 +15,17 @@ func _ready():
 
 func hit_by_bullet(dmg):
 	health -= dmg
-	var format_str = "Dmg numbers %f, Health numbers %f"
-	var actual = format_str % [health, dmg]
+	if health < 0:
+		var format_str = "Dmg numbers %f, Health numbers %f"
+		var actual = format_str % [health, dmg]
+		death()
 	
 func death():
-	if health < 0:
-		is_destroyed = true
-		$AnimatedSprite.play("Destroyed")
-		$CollisionShape2D.disabled = true
-		$Timer.start()
-	print("not dead")
+	is_destroyed = true
+	$AnimatedSprite.play("Destroyed")
+	$CollisionShape2D.disabled = true
+	$Timer.start()
 	
-		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

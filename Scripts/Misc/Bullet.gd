@@ -40,6 +40,6 @@ func _on_VisibilityNotifier2D_screen_exited():
 func _on_Bullet_body_entered(body):
 	if "Distortion" in body.name:
 		queue_free()
-		body.death()
+		body.hit_by_bullet(dmg)
 	queue_free()
 		
