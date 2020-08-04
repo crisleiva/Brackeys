@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/RewindEffect.png-66bae15117682499a379b60a4855b313.stex"
+path="res://.import/Hole.png-76384c4a1602509bcfb5674287383f0e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://RewindEffect.png"
-dest_files=[ "res://.import/RewindEffect.png-66bae15117682499a379b60a4855b313.stex" ]
+source_file="res://Assets/Sprites/Hole.png"
+dest_files=[ "res://.import/Hole.png-76384c4a1602509bcfb5674287383f0e.stex" ]
 
 [params]
 

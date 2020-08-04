@@ -1,6 +1,5 @@
-extends KinematicBody2D
-var velocity = Vector2()
-var player = load("res://Character.gd").new()
+extends Node2D
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -8,9 +7,14 @@ var player = load("res://Character.gd").new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	velocity.x = player.is_facing()
-	if $Timer
+	pass
+
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	move_and_slide(velocity)
+#func _process(delta):
+#	pass
+
+
+func _on_Distortion_body_entered(body):
+	pass # Replace with function body.
