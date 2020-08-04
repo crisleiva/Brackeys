@@ -7,16 +7,15 @@ extends KinematicBody2D
 onready var REWIND = preload("res://Scenes/Misc/Bullet.tscn")
 onready var DIST = preload("res://Scenes/Actors/Distortion.tscn")
 var timer = null
-var cooldown = 3
-var run_speed = 350
+const RUN_SPEED = 160
+const JUMP_POWER = -550
+const GRAVITY = 10
 var jump_speed = -1000
 var gravity = 2500
 var health = 6
-var dir = ""
 var velocity = Vector2()
-var bullet_delay = 2
+var bullet_delay = 1
 var can_shoot = true
-
 func get_input():
 	velocity.x = 0
 	var right = Input.is_action_pressed('ui_right')
@@ -24,25 +23,25 @@ func get_input():
 	var jump = Input.is_action_just_pressed('ui_select')
 	var held_down = Input.is_action_pressed("ui_end")
 
-	if is_on_floor() and jump:
-		velocity.y = jump_speed
+	
 	if right:
-		velocity.x += run_speed
+		velocity.x = RUN_SPEED
 		$AnimatedSprite.play("right")
-		$AnimatedSprite.flip_h = false
 		if sign($Muzzle.position.x) == -1:
 			$Muzzle.position.x *= -1
-		
+	if jump && is_on_floor():
+		velocity.y = JUMP_POWER
 	if left:
-		velocity.x -= run_speed
-		
-		$AnimatedSprite.flip_h = true
+		velocity.x = -RUN_SPEED
+		$AnimatedSprite.play("left")
 		if sign($Muzzle.position.x) == 1:
 			$Muzzle.position.x *= -1
 	if held_down && can_shoot:
 		shoot()
+	velocity.y += GRAVITY
+	
 		
-		
+
 func shoot():
 	var bullet = REWIND.instance()
 	if sign($Muzzle.position.x) == 1:
@@ -70,7 +69,7 @@ func _ready():
 	
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _physics_process(delta):
 	velocity.y += gravity * delta
 	get_input()
 	velocity = move_and_slide(velocity, Vector2(0, -1))
