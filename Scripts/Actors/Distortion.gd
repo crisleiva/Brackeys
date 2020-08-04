@@ -1,5 +1,4 @@
 extends KinematicBody2D
-signal hit
 var health = 10
 var is_destroyed = false
 
@@ -16,14 +15,23 @@ func _ready():
 
 func hit_by_bullet(dmg):
 	health -= dmg
-	print("ouch")
+	var format_str = "Dmg numbers %f, Health numbers %f"
+	var actual = format_str % [health, dmg]
 	
 func death():
-	is_destroyed = true
-	$AnimatedSprite.play("Destroyed")
+	if health < 0:
+		is_destroyed = true
+		$AnimatedSprite.play("Destroyed")
+		$CollisionShape2D.disabled = true
+		$Timer.start()
+	print("not dead")
 	
 		
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+
+func _on_Timer_timeout():
+	queue_free()

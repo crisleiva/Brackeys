@@ -3,7 +3,6 @@
 [ext_resource path="res://Scripts/Misc/Gun.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Sprites/Gun.png" type="Texture" id=2]
 
-
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 2.75235
 height = 5.88569

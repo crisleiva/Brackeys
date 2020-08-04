@@ -55,4 +55,3 @@ scale = Vector2( 2, 2 )
 
 [node name="Distortion2" parent="." instance=ExtResource( 4 )]
 position = Vector2( 2152.41, 547.012 )
-[connection signal="hit" from="Distortion" to="Character" method="_on_Distortion_hit"]

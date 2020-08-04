@@ -5,6 +5,8 @@ var player = load("res://Scripts/Actors/Character.gd").new()
 var speed = 200
 var direction = 1
 var dmg = 2
+const COOLDOWN = 3
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -38,7 +40,6 @@ func _on_VisibilityNotifier2D_screen_exited():
 func _on_Bullet_body_entered(body):
 	if "Distortion" in body.name:
 		queue_free()
-		print("out")
 		body.death()
 	queue_free()
 		
