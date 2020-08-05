@@ -17,7 +17,18 @@ var health = 6
 var velocity = Vector2()
 var bullet_delay = 1
 var can_shoot = true
-
+var damage = 0
+var can_rewind = false
+var weapons = {
+	"pistol": {
+		damage = 1,
+		can_rewind = false
+	},
+	"rewind_gun": {
+		damage = 0,
+		can_rewind = true
+	}
+}
 
 func _get_input():
 	var move_direction = -int(Input.is_action_pressed("move_left")) + int(Input.is_action_pressed("move_right"))
