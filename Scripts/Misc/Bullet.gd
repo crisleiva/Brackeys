@@ -1,18 +1,10 @@
 extends Area2D
-signal dmg_enemy
 var velocity = Vector2()
 var player = load("res://Scripts/Actors/Character.gd").new()
 var speed = 200
 var direction = 1
 var dmg = 2
 const COOLDOWN = 3
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-func ConnectSignalTo(TargetNode):
-	self.connect("dmg_enemy", TargetNode, "hit_by_bullet")
 
 func set_direction(dir):
 	direction = dir
@@ -29,7 +21,6 @@ func _process(delta):
 	velocity.x = speed * delta * direction
 	translate(velocity)
 	$AnimatedSprite.play("Shot")
-	emit_signal("dmg_enemy")
 	
 
 

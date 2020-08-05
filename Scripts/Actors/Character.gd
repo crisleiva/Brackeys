@@ -6,41 +6,33 @@ extends KinematicBody2D
 # var b = "text"
 onready var REWIND = preload("res://Scenes/Misc/Bullet.tscn")
 onready var DIST = preload("res://Scenes/Actors/Distortion.tscn")
+onready var raycasts = $RayCasts
 var timer = null
-const RUN_SPEED = 160
-const JUMP_POWER = -550
-const GRAVITY = 10
-var jump_speed = -1000
-var gravity = 2500
+const RUN_SPEED = 5 * 32
+const JUMP_POWER = -750
+const GRAVITY = 1200
+const SLOPE_STOP = 64
+var is_grounded
 var health = 6
 var velocity = Vector2()
 var bullet_delay = 1
 var can_shoot = true
-func get_input():
-	velocity.x = 0
-	var right = Input.is_action_pressed('ui_right')
-	var left = Input.is_action_pressed('ui_left')
-	var jump = Input.is_action_just_pressed('ui_select')
-	var held_down = Input.is_action_pressed("ui_end")
 
+
+func _get_input():
+	var move_direction = -int(Input.is_action_pressed("move_left")) + int(Input.is_action_pressed("move_right"))
+	velocity.x = lerp(velocity.x, RUN_SPEED * move_direction, 0.2)
+	if move_direction != 0:
+		$Body.scale.x = move_direction
 	
-	if right:
-		velocity.x = RUN_SPEED
-		$AnimatedSprite.play("right")
-		if sign($Muzzle.position.x) == -1:
-			$Muzzle.position.x *= -1
-	if jump && is_on_floor():
-		velocity.y = JUMP_POWER
-	if left:
-		velocity.x = -RUN_SPEED
-		$AnimatedSprite.play("left")
+	if Input.is_action_pressed("move_left"):
 		if sign($Muzzle.position.x) == 1:
-			$Muzzle.position.x *= -1
-	if held_down && can_shoot:
+			$Muzzle.position *= -1
+	if Input.is_action_pressed("move_right"):
+		if sign($Muzzle.position.x) == -1:
+			$Muzzle.position *= -1
+	if Input.is_action_pressed("shoot") && can_shoot:
 		shoot()
-	velocity.y += GRAVITY
-	
-		
 
 func shoot():
 	var bullet = REWIND.instance()
@@ -54,7 +46,9 @@ func shoot():
 	can_shoot = false
 	timer.start()
 	
-
+func _input(event):
+	if event.is_action_pressed("jump") && is_grounded:
+		velocity.y = JUMP_POWER
 	
 
 # Called when the node enters the scene tree for the first time.
@@ -70,10 +64,19 @@ func _ready():
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	velocity.y += gravity * delta
-	get_input()
-	velocity = move_and_slide(velocity, Vector2(0, -1))
+	_get_input()
+	velocity.y += GRAVITY * delta 
+	velocity = move_and_slide(velocity, Vector2(0, -1), SLOPE_STOP)
+	is_grounded = _check_is_grounded()
 
+
+func _check_is_grounded():
+	for raycast in raycasts.get_children():
+		if raycast.is_colliding():
+			return true
+	return false
+	
+	
 func on_timeout_complete():
 	can_shoot = true
 
