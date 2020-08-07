@@ -180,6 +180,7 @@ points = PoolVector2Array( 16, 1.75, 32, 0, 32, 26.75, 17, 24.75 )
 7/z_index = 0
 
 [node name="MainScene" type="Node2D"]
+position = Vector2( 1, -8 )
 
 [node name="TileMap" type="TileMap" parent="."]
 position = Vector2( -5.04535, -174.906 )
