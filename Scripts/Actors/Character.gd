@@ -8,6 +8,7 @@ onready var DIST = preload("res://Scenes/Actors/Distortion.tscn")
 # Readying up Raycast to detect ground collision
 onready var raycasts = $RayCasts
 onready var anim_player = $AnimatedSprite
+onready var state_machines = $PlayerState
 # Two health variables to be used by our GUI
 export var max_health = 6
 export var max_r_protect = 5
@@ -28,7 +29,7 @@ var is_jumping = false
 
 var velocity = Vector2()
 
-var max_jump_height = 2.25 * Globals.TILE_SIZE
+var max_jump_height = 3.25 * Globals.TILE_SIZE
 var min_jump_height = 0.8 * Globals.TILE_SIZE
 var jump_duration = 0.5
 var max_jump_velo
@@ -54,40 +55,12 @@ func _handle_move_input():
 	var move_direction = -int(Input.is_action_pressed("move_left")) + int(Input.is_action_pressed("move_right"))
 	velocity.x = lerp(velocity.x, RUN_SPEED * move_direction, 0.2)
 	# Movement direction will always be +1 -1 that determines our players left or right
-	if move_direction != 0:
+	if abs(move_direction) < 16:
 		$Body.scale.x = move_direction
 	# Creating checks for animations and to set our Gun's position to allow us to shoot in the right direction
-	if Input.is_action_pressed("move_left"):
-		$AnimatedSprite.play("run")
-		$AnimatedSprite.flip_h = true
-		if sign($Muzzle.position.x) == 1:
-			$Muzzle.position *= -1
-	elif Input.is_action_pressed("move_right"):
-		$AnimatedSprite.play("run")
-		$AnimatedSprite.flip_h = false
-		if sign($Muzzle.position.x) == -1:
-			$Muzzle.position *= -1
-	
-	if Input.is_action_pressed("shoot") && can_shoot:
-		$AnimatedSprite.play("shoot")
-		shoot()
-	else:
-		$AnimatedSprite.stop()
-		
-func _input(event):
-	print("in input event")
-	if event.is_action_pressed("jump") && is_grounded:
-		velocity.y = max_jump_velo
-		print("jump")
-		
-	if event.is_action_released("jump") && velocity.y < min_jump_velo:
-		velocity.y = min_jump_velo
-		is_jumping = true
-		
-	#add logic to stop a plyer from double jumping LOL
+
 # Shoot creates a new instance of our bullet and creates the position 
-func shoot():
-	
+func shoot():	
 	var bullet = REWIND.instance()
 	if sign($Muzzle.position.x) == 1:
 		bullet.set_direction(1)
