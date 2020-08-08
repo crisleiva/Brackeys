@@ -24,7 +24,6 @@ func _get_transition(delta):
 
 
 func fire_weapon():
-	print("here in fire")
 	var main_states = parent.state_machines.states
 	if parent.can_shoot:
 		return ![main_states.jump, main_states.fall].has(parent.state_machines.state)
@@ -34,7 +33,7 @@ func fire_weapon():
 func _enter_state(new_state, old_state):
 	match new_state:
 		states.none:
-			parent.anim_player.play("idle")
+			return 
 		states.shoot:
 			parent.anim_player.play("shoot")
 # Called every frame. 'delta' is the elapsed time since the previous frame.

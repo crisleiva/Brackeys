@@ -22,15 +22,14 @@ func _process(delta):
 	translate(velocity)
 	$AnimatedSprite.play("Shot")
 	
-
-
 func _on_VisibilityNotifier2D_screen_exited():
 	queue_free()
 
 
 func _on_Bullet_body_entered(body):
-	if "Distortion" in body.name:
-		queue_free()
-		body.hit_by_bullet(dmg)
-	queue_free()
+	var count = 0
+	if body.name == "enemy":
+		body._hit(dmg)
+	if body.name == "enemy2":
+		body._hit(dmg)
 		

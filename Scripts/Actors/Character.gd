@@ -1,7 +1,9 @@
 #Character Script
 extends KinematicBody2D
 signal died
+signal rewind
 signal health_changed
+signal protection_changed
 #Preloading Bullet + Distortion Enemy
 onready var REWIND = preload("res://Scenes/Misc/Bullet.tscn")
 onready var DIST = preload("res://Scenes/Actors/Distortion.tscn")
@@ -9,10 +11,14 @@ onready var DIST = preload("res://Scenes/Actors/Distortion.tscn")
 onready var raycasts = $RayCasts
 onready var anim_player = $AnimatedSprite
 onready var state_machines = $PlayerState
+
+enum states {ALIVE, DEAD}
+var state = states.ALIVE
 # Two health variables to be used by our GUI
 export var max_health = 6
-export var max_r_protect = 5
+export var max_r_protect = 6
 var health = max_health
+var rewind_protect = max_r_protect
 # Timer that helps with bullet delay
 var timer = null
 var bullet_delay = 1
@@ -31,6 +37,7 @@ var velocity = Vector2()
 
 var max_jump_height = 3.25 * Globals.TILE_SIZE
 var min_jump_height = 0.8 * Globals.TILE_SIZE
+
 var jump_duration = 0.5
 var max_jump_velo
 var min_jump_velo
@@ -57,6 +64,15 @@ func _handle_move_input():
 	# Movement direction will always be +1 -1 that determines our players left or right
 	if abs(move_direction) < 16:
 		$Body.scale.x = move_direction
+		
+	if move_direction == 1:
+		if sign($Muzzle.position.x) == -1:
+			$Muzzle.position.x *= -1
+		anim_player.flip_h = false
+	if move_direction == -1:
+		if sign($Muzzle.position.x) == 1:
+			$Muzzle.position.x *= -1
+		anim_player.flip_h = true
 	# Creating checks for animations and to set our Gun's position to allow us to shoot in the right direction
 
 # Shoot creates a new instance of our bullet and creates the position 
@@ -87,11 +103,23 @@ func _ready():
 	set_process_input(true)
 	set_process(true)
 
-func died():
+
+func hit(dmg):
+	if state == states.DEAD:
+		anim_player.play("death")
+	health -= dmg
+	emit_signal("health_changed", health)
 	if health <= 0:
-		pass
-	else:
-		pass
+		state = states.DEAD
+	anim_player.play("attacked")
+		
+
+func rewind_loss(rewind_dmg):
+	rewind_protect -= rewind_dmg
+	emit_signal("protection_changed", rewind_protect)
+	if rewind_protect <= 0:
+		var spawn = get_parent().get_node("Spawn")
+		self.position = spawn.position
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
