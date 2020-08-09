@@ -10,9 +10,10 @@ script = ExtResource( 2 )
 motion_scale = Vector2( 0.5, 0.5 )
 
 [node name="TextureRect" type="TextureRect" parent="ParallaxLayer"]
-margin_left = -155.022
-margin_right = 3844.98
-margin_bottom = 600.0
+margin_left = -151.047
+margin_top = -47.6992
+margin_right = 3848.96
+margin_bottom = 552.301
 texture = ExtResource( 1 )
 stretch_mode = 2
 __meta__ = {

@@ -206,7 +206,7 @@ margin_right = 10.6796
 margin_bottom = 56.8932
 
 [node name="Enemy" parent="." instance=ExtResource( 5 )]
-position = Vector2( 1082.24, 302.708 )
+position = Vector2( 1070.7, 222.676 )
 
 [node name="enemy2" parent="." instance=ExtResource( 5 )]
 position = Vector2( 1821.36, 495.006 )

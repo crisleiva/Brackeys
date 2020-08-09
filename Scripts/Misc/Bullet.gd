@@ -32,4 +32,5 @@ func _on_Bullet_body_entered(body):
 		body._hit(dmg)
 	if body.name == "enemy2":
 		body._hit(dmg)
+	queue_free()
 		

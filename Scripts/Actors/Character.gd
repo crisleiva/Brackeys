@@ -27,7 +27,6 @@ var can_shoot = true
 
 #Constants and vars added for our movement
 const RUN_SPEED = 5 * 32
-const JUMP_POWER = -400
 const SLOPE_STOP = 64
 var gravity
 var is_grounded
@@ -35,7 +34,7 @@ var is_jumping = false
 
 var velocity = Vector2()
 
-var max_jump_height = 3.25 * Globals.TILE_SIZE
+var max_jump_height = 3.0 * Globals.TILE_SIZE
 var min_jump_height = 0.8 * Globals.TILE_SIZE
 
 var jump_duration = 0.5
