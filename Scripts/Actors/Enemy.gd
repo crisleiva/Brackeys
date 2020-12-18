@@ -1,19 +1,21 @@
 extends KinematicBody2D
 
 # Player node for ai to follow
-onready var player =  get_parent().get_node("res://Scenes/Actors/Character.tscn")
+# onready var player =  get_parent().get_node("res://Scenes/Actors/Character.tscn")
 onready var raycasts = $RayCast
 onready var area = $Area2D
 onready var damage = 2
 onready var move_speed = 2 * 32
 onready var timer = $Timer
 var health = 3
+var player = null
 enum states {alive, dead}
 var state = states.alive
-var velocity = Vector2()
-var gravity = 1200
-var delay = 2
-var is_destroyed = false
+var is_grounded
+var velocity: Vector2 = Vector2.ZERO
+var gravity: int = 1200
+var delay: int = 2
+var is_destroyed: bool = false
 onready var Goo_Shot = preload("res://Scenes/Misc/GooShot.tscn")
 
 func _hit(dmg):
@@ -25,10 +27,10 @@ func _hit(dmg):
 		health = 0
 		death()
 
-func shoot(player):
-	var shot = Goo_Shot.instance()
-	shot.position = $Muzzle.position
-	get_parent().add_child(shot)
+# func shoot(player):
+# 	var shot = Goo_Shot.instance()
+# 	shot.position = $Muzzle.position
+# 	get_parent().add_child(shot)
 		
 func death():
 	is_destroyed = true
@@ -37,26 +39,31 @@ func death():
 	$Timer.start()
 	
 func attack():
-	pass
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+	if player:
+		$AnimatedSprite.play("attacking")
+		player.hit(damage)
+	else:
+		$AnimatedSprite.play("idle")
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass
-
+func enemy_move(delta):
+	# on a timer move to point a then point b, then back
+	# when it spots the player. Move towards that area
+	velocity = Vector2.ZERO
+	velocity.y += gravity * delta 
+	is_grounded = _check_is_grounded()
+	if player:
+		velocity = position.direction_to(player.position) * move_speed
+	velocity = move_and_slide(velocity)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta):
-	velocity.y += gravity * delta
-	velocity = move_and_slide(velocity, Vector2(0, -1))
-	_check_if_grounded()
+func _physics_process(_delta):
+	enemy_move(_delta)
+	attack()
 
 func _on_Timer_timeout():
 	queue_free()
 
-func _check_if_grounded():
+func _check_is_grounded():
 	for raycast in raycasts.get_children():
 		if raycast.is_colliding():
 			return true
@@ -64,6 +71,7 @@ func _check_if_grounded():
 
 func _on_Area2D_body_entered(body):
 	if body.name == "Character":
-		shoot(body)
-		$AnimatedSprite.play("attacking")
-		print("ha")
+		player = body
+
+func _on_Area2D_body_exited(_body):
+	player = null

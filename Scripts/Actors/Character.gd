@@ -121,7 +121,7 @@ func rewind_loss(rewind_dmg):
 		self.position = spawn.position
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta):
+func _physics_process(_delta):
 	_handle_move_input()
 	
 func _apply_movement():
